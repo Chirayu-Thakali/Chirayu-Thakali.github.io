@@ -1,7 +1,7 @@
 export default function AboutPage() {
     return (
         <section className="page-section" aria-labelledby="about-title">
-            <h1 id="about-title">About this space</h1>
+            <h1 id="about-title">About Me</h1>
             <div className="about-layout">
                 <div className="about-lead">
                     <p className="lead-text">
@@ -14,15 +14,15 @@ export default function AboutPage() {
                 <dl className="fact-list">
                     <div>
                         <dt>Focus</dt>
-                        <dd>Creative technology</dd>
+                        <dd>Computer Engineering</dd>
                     </div>
                     <div>
                         <dt>Based in</dt>
-                        <dd>Your city, country</dd>
+                        <dd>Lafayette Hill, Pennsylvania</dd>
                     </div>
                     <div>
-                        <dt>Open to</dt>
-                        <dd>Good conversations</dd>
+                        <dt>School</dt>
+                        <dd>Plymouth Whitemarsh High School</dd>
                     </div>
                 </dl>
             </div>

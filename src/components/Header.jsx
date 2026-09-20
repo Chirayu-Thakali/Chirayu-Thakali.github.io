@@ -1,6 +1,7 @@
 const navigation = [
     { label: "Home", href: "#home" },
     { label: "About", href: "#about" },
+    { label: "Portfolio", href: "#portfolio" },
     { label: "Contact", href: "#contact" }
 ];
 
@@ -20,9 +21,7 @@ export default function Header({ currentPage }) {
                             <li key={item.href}>
                                 <a
                                     href={item.href}
-                                    aria-current={
-                                        currentPage === item.href.slice(1) ? "page" : undefined
-                                    }
+                                    aria-current={currentPage === item.href.slice(1) ? "page" : undefined}
                                 >
                                     {item.label}
                                 </a>

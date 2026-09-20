@@ -1,12 +1,12 @@
 const contactLinks = [
-    { label: "GitHub", href: "https://github.com/Chirayu-Thakali", icon: "fab fa-github" },
+    { label: "GitHub", href: "https://github.com/Cylindricalc", icon: "fab fa-github" },
     { label: "LinkedIn", href: "#", icon: "fab fa-linkedin-in" },
     { label: "X / Twitter", href: "#", icon: "fab fa-x-twitter" },
-    { label: "Instagram", href: "#", icon: "fab fa-instagram" },
-    { label: "Discord", href: "#", icon: "fab fa-discord" },
+    { label: "Instagram", href: "https://www.instagram.com/chirayu_thakali/", icon: "fab fa-instagram" },
+    { label: "Discord", href: "https://discordapp.com/users/756539358852546610", icon: "fab fa-discord" },
     { label: "Email", href: "mailto:cylinavamp@gmail.com", icon: "fas fa-envelope" },
-    { label: "Phone / Mobile", href: "#", icon: "fas fa-phone" },
-    { label: "WhatsApp", href: "#", icon: "fab fa-whatsapp" }
+    { label: "Phone / Mobile", href: "tel:+14849042448", icon: "fas fa-phone" },
+    { label: "WhatsApp", href: "wa.me/+14849042448", icon: "fab fa-whatsapp" }
 ];
 
 export default function Footer() {

@@ -1,33 +1,19 @@
-const projectPlaceholders = [
-    {
-        number: "01",
-        title: "Project title",
-        text: "A short description of a project, experiment, or collaboration goes here."
-    },
-    {
-        number: "02",
-        title: "Another idea",
-        text: "Use these cards for work you want visitors to understand at a glance."
-    },
-    {
-        number: "03",
-        title: "Coming soon",
-        text: "A flexible placeholder for something you are currently building."
-    }
-];
+import { portfolioProjects } from "../data/portfolioData.js";
+
+const recentProjects = portfolioProjects.slice(-3).reverse();
 
 export default function HomePage() {
     return (
         <>
             <section className="hero-section" aria-labelledby="home-title">
                 <div className="hero-copy">
-                    <h1 id="home-title">Making thoughtful things for the web.</h1>
+                    <h1 id="home-title">Chirayu Thakali</h1>
                     <p className="hero-description">
                         Welcome to my corner of the internet. This is a flexible starting point for sharing work, ideas, and the things I am learning along the way.
                     </p>
                     <div className="hero-actions">
-                        <a className="button button-primary" href="#about">
-                            Explore the work <span aria-hidden="true">↗</span>
+                        <a className="button button-primary" href="#portfolio">
+                            Explore my work <span aria-hidden="true">↗</span>
                         </a>
                         <a className="text-link" href="#contact">
                             Start a conversation
@@ -44,18 +30,20 @@ export default function HomePage() {
             </section>
             <section className="section-block" aria-labelledby="selected-work-title">
                 <div className="section-heading">
-                    <h2 id="selected-work-title">Selected work</h2>
+                    <h2 id="selected-work-title">Recent Projects</h2>
                     <p>
-                        Placeholder projects give the site a home now, while leaving room for the real stories you will add later.
+                        These are the most recent projects I have worked on and achievements I've accomplished.
                     </p>
                 </div>
                 <div className="project-grid">
-                    {projectPlaceholders.map((project) => (
-                        <article className="project-card" key={project.number}>
-                            <span className="project-number">{project.number}</span>
+                    {recentProjects.map((project, index) => (
+                        <article className="project-card" key={project.id}>
+                            <span className="project-number">
+                                {index === 0 ? "Latest" : String(index + 1).padStart(2, "0")}
+                            </span>
                             <h3>{project.title}</h3>
-                            <p>{project.text}</p>
-                            <a href="#about" className="card-link">
+                            <p>{project.description}</p>
+                            <a href={project.link} className="card-link">
                                 Read more <span aria-hidden="true">→</span>
                             </a>
                         </article>
