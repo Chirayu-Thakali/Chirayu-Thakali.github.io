@@ -6,7 +6,7 @@ const contactLinks = [
     { label: "Discord", href: "https://discordapp.com/users/756539358852546610", icon: "fab fa-discord" },
     { label: "Email", href: "mailto:cylinavamp@gmail.com", icon: "fas fa-envelope" },
     { label: "Phone / Mobile", href: "tel:+14849042448", icon: "fas fa-phone" },
-    { label: "WhatsApp", href: "wa.me/+14849042448", icon: "fab fa-whatsapp" }
+    { label: "WhatsApp", href: "https://wa.me/+14849042448", icon: "fab fa-whatsapp" }
 ];
 
 export default function Footer() {

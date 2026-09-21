@@ -23,10 +23,17 @@ function getScrollMetrics() {
 export default function ScrollBar() {
     const [metrics, setMetrics] = useState(getScrollMetrics);
     const dragging = useRef(null);
+    const frame = useRef(null);
 
     useEffect(() => {
         const updateMetrics = () => setMetrics(getScrollMetrics());
-        const handleScroll = () => requestAnimationFrame(updateMetrics);
+        const handleScroll = () => {
+            if (frame.current !== null) return;
+            frame.current = requestAnimationFrame(() => {
+                frame.current = null;
+                updateMetrics();
+            });
+        };
         const content = document.getElementById("main-content");
         const resizeObserver = new ResizeObserver(updateMetrics);
         const mutationObserver = new MutationObserver(updateMetrics);
@@ -45,6 +52,7 @@ export default function ScrollBar() {
         return () => {
             window.removeEventListener("scroll", handleScroll);
             window.removeEventListener("resize", updateMetrics);
+            if (frame.current !== null) cancelAnimationFrame(frame.current);
             resizeObserver.disconnect();
             mutationObserver.disconnect();
         };

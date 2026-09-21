@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Footer from "./components/Footer.jsx";
 import Header from "./components/Header.jsx";
 import ScrollBar from "./components/ScrollBar.jsx";
@@ -16,7 +16,14 @@ const routes = {
 
 function getRoute() {
     const [base, rawCategorySlug] = window.location.hash.split("/");
-    const categorySlug = rawCategorySlug ? decodeURIComponent(rawCategorySlug) : undefined;
+    let categorySlug;
+
+    try {
+        categorySlug = rawCategorySlug ? decodeURIComponent(rawCategorySlug) : undefined;
+    } catch {
+        categorySlug = undefined;
+    }
+
     return { page: routes[base] || "home", categorySlug };
 }
 
@@ -33,37 +40,61 @@ export default function App() {
     const [categorySlug, setCategorySlug] = useState(initialRoute.categorySlug);
     const [transition, setTransition] = useState("cover");
     const [initialLoad, setInitialLoad] = useState(true);
+    const transitionTimers = useRef([]);
+
+    const clearTransitionTimers = () => {
+        transitionTimers.current.forEach((timer) => window.clearTimeout(timer));
+        transitionTimers.current = [];
+    };
+
+    const scheduleTransition = (callbacks) => {
+        clearTransitionTimers();
+        transitionTimers.current = callbacks.map(({ delay, callback }) =>
+            window.setTimeout(callback, delay)
+        );
+    };
 
     useEffect(() => {
         const handleRouteChange = () => {
             const nextRoute = getRoute();
             setTransition("cover");
 
-            window.setTimeout(() => {
-                setPage(nextRoute.page);
-                setCategorySlug(nextRoute.categorySlug);
-                window.scrollTo({ top: 0, behavior: "smooth" });
-                setTransition("rotate");
-            }, 420);
-
-            window.setTimeout(() => setTransition("reveal"), 1070);
-            window.setTimeout(() => setTransition("idle"), 1510);
+            scheduleTransition([
+                {
+                    delay: 420,
+                    callback: () => {
+                        setPage(nextRoute.page);
+                        setCategorySlug(nextRoute.categorySlug);
+                        window.scrollTo({ top: 0, behavior: "smooth" });
+                        setTransition("rotate");
+                    }
+                },
+                { delay: 1070, callback: () => setTransition("reveal") },
+                { delay: 1510, callback: () => setTransition("idle") }
+            ]);
         };
         window.addEventListener("hashchange", handleRouteChange);
-        return () => window.removeEventListener("hashchange", handleRouteChange);
+        return () => {
+            window.removeEventListener("hashchange", handleRouteChange);
+            clearTransitionTimers();
+        };
     }, []);
 
     useEffect(() => {
-        const rotateTimer = window.setTimeout(() => setTransition("rotate"), 420);
-        const revealTimer = window.setTimeout(() => setTransition("reveal"), 1070);
-        const idleTimer = window.setTimeout(() => {
-            setTransition("idle");
-            setInitialLoad(false);
-        }, 1510);
+        scheduleTransition([
+            { delay: 420, callback: () => setTransition("rotate") },
+            { delay: 1070, callback: () => setTransition("reveal") },
+            {
+                delay: 1510,
+                callback: () => {
+                    setTransition("idle");
+                    setInitialLoad(false);
+                }
+            }
+        ]);
+
         return () => {
-            window.clearTimeout(rotateTimer);
-            window.clearTimeout(revealTimer);
-            window.clearTimeout(idleTimer);
+            clearTransitionTimers();
         };
     }, []);
 
