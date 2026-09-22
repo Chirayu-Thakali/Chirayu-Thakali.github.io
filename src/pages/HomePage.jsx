@@ -1,8 +1,12 @@
+import { useState } from "react";
+import ProjectGallery from "../components/ProjectGallery.jsx";
 import { portfolioProjects } from "../data/portfolioData.js";
 
 const recentProjects = portfolioProjects.slice(-3).reverse();
 
 export default function HomePage() {
+    const [galleryProject, setGalleryProject] = useState(null);
+
     return (
         <>
             <section className="hero-section" aria-labelledby="home-title">
@@ -43,13 +47,30 @@ export default function HomePage() {
                             </span>
                             <h3>{project.title}</h3>
                             <p>{project.description}</p>
-                            <a href={project.link} className="card-link">
-                                Read more <span aria-hidden="true">→</span>
-                            </a>
+                            {project.images?.length > 0 ? (
+                                <a
+                                    className="card-link"
+                                    href={project.images[0]}
+                                    onClick={(event) => {
+                                        event.preventDefault();
+                                        setGalleryProject(project);
+                                    }}
+                                >
+                                    See More <span aria-hidden="true">↗</span>
+                                </a>
+                            ) : (
+                                <a className="card-link" href={project.link}>
+                                    See More <span aria-hidden="true">↗</span>
+                                </a>
+                            )}
                         </article>
                     ))}
                 </div>
             </section>
+            <ProjectGallery
+                project={galleryProject}
+                onClose={() => setGalleryProject(null)}
+            />
         </>
     );
 }

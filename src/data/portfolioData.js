@@ -26,13 +26,13 @@ export const portfolioProjects = [
         ]
     },
     {
-        id: "independent-study",
-        title: "Independent study",
-        category: "web-development",
+        id: "les-grand-concours",
+        title: "Les Grand Concours",
+        category: "achievements",
         set: null,
-        year: "Coming soon",
-        description: "A standalone project that does not belong to a larger collection.",
-        link: "#contact"
+        year: "2026",
+        description: "Placed 13th nationally in Les Grand Concours, a national French language competition.",
+        link: "https://cms.colonialsd.org/news/post/~board/district-news/post/cms-french-students-shine-in-the-national-french-contest"
     },
     {
         id: "personal-portfolio",
@@ -41,7 +41,7 @@ export const portfolioProjects = [
         set: "Personal work",
         year: "2026",
         description: "A personal space for sharing projects, ideas, and an evolving body of work.",
-        link: "#home"
+        link: "#portfolio"
     }
     
 ];

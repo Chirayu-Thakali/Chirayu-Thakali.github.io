@@ -24,6 +24,7 @@ export default function ScrollBar() {
     const [metrics, setMetrics] = useState(getScrollMetrics);
     const dragging = useRef(null);
     const frame = useRef(null);
+    const previousScrollBehavior = useRef("");
 
     useEffect(() => {
         const updateMetrics = () => setMetrics(getScrollMetrics());
@@ -60,6 +61,8 @@ export default function ScrollBar() {
 
     const handlePointerDown = (event) => {
         event.preventDefault();
+        previousScrollBehavior.current = document.documentElement.style.scrollBehavior;
+        document.documentElement.style.scrollBehavior = "auto";
         dragging.current = {
             startY: event.clientY,
             startScroll: window.scrollY,
@@ -79,10 +82,11 @@ export default function ScrollBar() {
             ? (dragDistance / dragging.current.maximumThumbTop) * dragging.current.maximumScroll
             : 0;
 
-        window.scrollTo(0, dragging.current.startScroll + scrollDistance);
+        document.documentElement.scrollTop = dragging.current.startScroll + scrollDistance;
     };
 
     const stopDragging = () => {
+        document.documentElement.style.scrollBehavior = previousScrollBehavior.current;
         dragging.current = null;
     };
 
@@ -98,7 +102,7 @@ export default function ScrollBar() {
             1
         );
 
-        window.scrollTo(0, scrollRatio * metrics.maximumScroll);
+        document.documentElement.scrollTop = scrollRatio * metrics.maximumScroll;
     };
 
     if (!metrics.maximumScroll) {
@@ -127,6 +131,7 @@ export default function ScrollBar() {
                 onPointerMove={handlePointerMove}
                 onPointerUp={stopDragging}
                 onPointerCancel={stopDragging}
+                onLostPointerCapture={stopDragging}
             />
         </div>
     );

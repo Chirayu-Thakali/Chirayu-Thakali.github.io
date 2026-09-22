@@ -34,6 +34,20 @@ function PageContent({ page, categorySlug }) {
     return <HomePage />;
 }
 
+function setScrollPositionInstantly(top) {
+    const documentElement = document.documentElement;
+    const body = document.body;
+    const previousDocumentBehavior = documentElement.style.scrollBehavior;
+    const previousBodyBehavior = body.style.scrollBehavior;
+
+    documentElement.style.scrollBehavior = "auto";
+    body.style.scrollBehavior = "auto";
+    documentElement.scrollTop = top;
+    body.scrollTop = top;
+    documentElement.style.scrollBehavior = previousDocumentBehavior;
+    body.style.scrollBehavior = previousBodyBehavior;
+}
+
 export default function App() {
     const initialRoute = getRoute();
     const [page, setPage] = useState(initialRoute.page);
@@ -41,6 +55,8 @@ export default function App() {
     const [transition, setTransition] = useState("cover");
     const [initialLoad, setInitialLoad] = useState(true);
     const transitionTimers = useRef([]);
+    const scrollPositions = useRef(new Map());
+    const activeHash = useRef(window.location.hash || "#home");
 
     const clearTransitionTimers = () => {
         transitionTimers.current.forEach((timer) => window.clearTimeout(timer));
@@ -55,8 +71,19 @@ export default function App() {
     };
 
     useEffect(() => {
+        const previousScrollRestoration = window.history.scrollRestoration;
+        window.history.scrollRestoration = "manual";
+
+        const rememberScrollPosition = () => {
+            scrollPositions.current.set(activeHash.current, window.scrollY);
+        };
+
         const handleRouteChange = () => {
+            rememberScrollPosition();
             const nextRoute = getRoute();
+            const nextHash = window.location.hash || "#home";
+            const destinationScroll = scrollPositions.current.get(nextHash) || 0;
+            activeHash.current = nextHash;
             setTransition("cover");
 
             scheduleTransition([
@@ -65,17 +92,26 @@ export default function App() {
                     callback: () => {
                         setPage(nextRoute.page);
                         setCategorySlug(nextRoute.categorySlug);
-                        window.scrollTo({ top: 0, behavior: "smooth" });
+                        setScrollPositionInstantly(0);
                         setTransition("rotate");
                     }
                 },
-                { delay: 1070, callback: () => setTransition("reveal") },
+                {
+                    delay: 1070,
+                    callback: () => {
+                        setScrollPositionInstantly(destinationScroll);
+                        setTransition("reveal");
+                    }
+                },
                 { delay: 1510, callback: () => setTransition("idle") }
             ]);
         };
         window.addEventListener("hashchange", handleRouteChange);
+        window.addEventListener("scroll", rememberScrollPosition, { passive: true });
         return () => {
             window.removeEventListener("hashchange", handleRouteChange);
+            window.removeEventListener("scroll", rememberScrollPosition);
+            window.history.scrollRestoration = previousScrollRestoration;
             clearTransitionTimers();
         };
     }, []);
